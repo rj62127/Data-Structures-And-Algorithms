@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        
+
+        vector<int> count(26);
+        vector<bool> used(26);
+        stack<char> stk;
+
+        for (char c : s) {
+            count[c - 'a']++;
+        }
+
+        for (char c : s) {
+            count[c - 'a']--;
+            if (used[c - 'a']) continue;
+            while (!stk.empty() && stk.top() > c && count[stk.top() - 'a'] > 0) {
+                used[stk.top() - 'a'] = false;
+                stk.pop();
+            }
+            stk.push(c);
+            used[c - 'a'] = true;
+        }
+
+        string res;
+        while (!stk.empty()) {
+            res = stk.top() + res;
+            stk.pop();
+        }
+
+        return res;
+
+    }
+};
