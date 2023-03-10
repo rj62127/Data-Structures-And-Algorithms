@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+
+        if (node == nullptr) {
+            return nullptr;
+        }
+        
+        unordered_map<Node*, Node*> copied;
+        queue<Node*> toCopy;
+        toCopy.push(node);
+        copied[node] = new Node(node->val);
+        
+        while (!toCopy.empty()) {
+            Node* original = toCopy.front();
+            toCopy.pop();
+            
+            Node* copy = copied[original];
+            
+            for (Node* neighbor : original->neighbors) {
+                if (copied.count(neighbor) == 0) {
+                    toCopy.push(neighbor);
+                    copied[neighbor] = new Node(neighbor->val);
+                }
+                copy->neighbors.push_back(copied[neighbor]);
+            }
+        }
+        
+        return copied[node];
+
+        
+    }
+};
