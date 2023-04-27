@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Solution {
+    private int maxLength = 0;
+
+    public int longestZigZag(TreeNode root) {
+        if (root == null) return 0;
+
+        // Check the maximum length of the zigzag path starting from the left child
+        dfs(root.left, 1, false);
+
+        // Check the maximum length of the zigzag path starting from the right child
+        dfs(root.right, 1, true);
+
+        return maxLength;
+    }
+
+    private void dfs(TreeNode node, int length, boolean isRight) {
+        if (node == null) {
+            maxLength = Math.max(maxLength, length - 1);
+            return;
+        }
+
+        if (isRight) {
+            // If the direction is right, we need to check the zigzag path starting from the left child
+            dfs(node.left, length + 1, false);
+            dfs(node.right, 1, true);
+        } else {
+            // If the direction is left, we need to check the zigzag path starting from the right child
+            dfs(node.right, length + 1, true);
+            dfs(node.left, 1, false);
+        }
+    }
+}
