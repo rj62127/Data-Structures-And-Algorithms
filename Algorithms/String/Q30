@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> result;
+        if (s.empty() || words.empty()) return result;
+        int n = s.size(), m = words.size(), l = words[0].size();
+        unordered_map<string, int> freq;
+        for (const string& word : words) freq[word]++;
+        for (int i = 0; i < l; i++) {
+            int left = i, count = 0;
+            unordered_map<string, int> seen;
+            for (int j = i; j <= n - l; j += l) {
+                string cur = s.substr(j, l);
+                if (freq.find(cur) != freq.end()) {
+                    seen[cur]++;
+                    count++;
+                    while (seen[cur] > freq[cur]) {
+                        seen[s.substr(left, l)]--;
+                        count--;
+                        left += l;
+                    }
+                    if (count == m) {
+                        result.push_back(left);
+                        seen[s.substr(left, l)]--;
+                        count--;
+                        left += l;
+                    }
+                } else {
+                    seen.clear();
+                    count = 0;
+                    left = j + l;
+                }
+            }
+        }
+        return result;
+    }
+};
