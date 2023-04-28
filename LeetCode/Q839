@@ -1,0 +1,61 @@
+class UnionFind {
+public:
+    UnionFind(int n) {
+        parent.resize(n);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+    
+    int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+    
+    void unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px != py) {
+            parent[px] = py;
+        }
+    }
+    
+    int count() {
+        int cnt = 0;
+        for (int i = 0; i < parent.size(); i++) {
+            if (parent[i] == i) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+    
+private:
+    vector<int> parent;
+};
+
+class Solution {
+public:
+    int numSimilarGroups(vector<string>& strs) {
+        int n = strs.size(), len = strs[0].size();
+        UnionFind uf(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int diff = 0;
+                for (int k = 0; k < len; k++) {
+                    if (strs[i][k] != strs[j][k]) {
+                        diff++;
+                        if (diff > 2) {
+                            break;
+                        }
+                    }
+                }
+                if (diff == 2 || diff == 0) {
+                    uf.unite(i, j);
+                }
+            }
+        }
+        return uf.count();
+    }
+};
