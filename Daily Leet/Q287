@@ -1,0 +1,32 @@
+QS :- Find the Duplicate Number
+QS Link :- https://leetcode.com/problems/find-the-duplicate-number/description/?envType=daily-question&envId=2024-03-24
+
+
+
+#include <vector>
+
+class Solution {
+public:
+    int findDuplicate(std::vector<int>& nums) {
+        // Initialize slow and fast pointers
+        int slow = nums[0];
+        int fast = nums[0];
+
+        // Move slow pointer one step and fast pointer two steps until they meet
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+
+        // Move slow pointer to the beginning and move both slow and fast pointer one step until they meet
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        // Return the duplicate number
+        return slow;
+    }
+};
+
