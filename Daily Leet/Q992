@@ -1,0 +1,38 @@
+QS :- Subarrays with K Different Integers
+QS Link :- https://leetcode.com/problems/subarrays-with-k-different-integers/description/?envType=daily-question&envId=2024-03-30
+
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    int subarraysWithKDistinct(vector<int>& nums, int k) {
+        return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
+    }
+    
+    int atMostKDistinct(vector<int>& nums, int k) {
+        int n = nums.size();
+        unordered_map<int, int> freq;
+        int left = 0, right = 0;
+        int count = 0;
+        
+        while (right < n) {
+            if (freq[nums[right]] == 0)
+                k--;
+            freq[nums[right]]++;
+            right++;
+            
+            while (k < 0) {
+                freq[nums[left]]--;
+                if (freq[nums[left]] == 0)
+                    k++;
+                left++;
+            }
+            
+            count += right - left;
+        }
+        
+        return count;
+    }
+};
