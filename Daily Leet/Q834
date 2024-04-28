@@ -1,0 +1,61 @@
+QS :- Sum of Distances in Tree
+QS Link :- https://leetcode.com/problems/sum-of-distances-in-tree/description/?envType=daily-question&envId=2024-04-28
+
+
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        // Initialize adjacency list to represent the tree
+        vector<vector<int>> adj(n);
+        for (const auto& edge : edges) {
+            int u = edge[0], v = edge[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+
+        // Initialize arrays to store counts and sums
+        vector<int> counts(n, 1); // Number of nodes in subtree rooted at i
+        vector<int> sums(n, 0);   // Sum of distances to nodes in subtree rooted at i
+
+        // First DFS to calculate counts and sums
+        dfs(0, -1, adj, counts, sums);
+
+        // Second DFS to calculate final answer
+        vector<int> result(n, 0);
+        result[0] = sums[0];
+        dfs2(0, -1, adj, counts, sums, result, n);
+
+        return result;
+    }
+
+private:
+    // First DFS to calculate counts and sums
+    void dfs(int node, int parent, const vector<vector<int>>& adj,
+             vector<int>& counts, vector<int>& sums) {
+        for (int neighbor : adj[node]) {
+            if (neighbor != parent) {
+                dfs(neighbor, node, adj, counts, sums);
+                counts[node] += counts[neighbor];
+                sums[node] += sums[neighbor] + counts[neighbor];
+            }
+        }
+    }
+
+    // Second DFS to calculate final answer
+    void dfs2(int node, int parent, const vector<vector<int>>& adj,
+              const vector<int>& counts, const vector<int>& sums,
+              vector<int>& result, int n) {
+        for (int neighbor : adj[node]) {
+            if (neighbor != parent) {
+                // Formula for the sum of distances: parent_sum - counts[neighbor] + (n - counts[neighbor])
+                result[neighbor] = result[node] - counts[neighbor] + (n - counts[neighbor]);
+                dfs2(neighbor, node, adj, counts, sums, result, n);
+            }
+        }
+    }
+};
