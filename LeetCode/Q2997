@@ -1,0 +1,26 @@
+QS :- Minimum Number of Operations to Make Array XOR Equal to K
+QS Link :- https://leetcode.com/problems/minimum-number-of-operations-to-make-array-xor-equal-to-k/description/?envType=daily-question&envId=2024-04-29
+
+#include <vector>
+
+class Solution {
+public:
+    int minOperations(std::vector<int>& nums, int k) {
+        int nums_xor = 0;
+        for (int num : nums) {
+            nums_xor ^= num;
+        }
+
+        int target_xor = nums_xor ^ k;
+
+        int operations = 0;
+        while (target_xor > 0) {
+            if (target_xor & 1) {
+                operations++;
+            }
+            target_xor >>= 1;
+        }
+
+        return operations;
+    }
+};
