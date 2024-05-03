@@ -1,0 +1,42 @@
+QS :- Compare Version Numbers
+QS Link :- https://leetcode.com/problems/compare-version-numbers/description/?envType=daily-question&envId=2024-05-03
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    int compareVersion(string version1, string version2) {
+        // Split version strings into revisions
+        vector<int> v1 = splitVersion(version1);
+        vector<int> v2 = splitVersion(version2);
+        
+        // Compare revisions
+        int n = max(v1.size(), v2.size());
+        for (int i = 0; i < n; ++i) {
+            int rev1 = (i < v1.size()) ? v1[i] : 0;
+            int rev2 = (i < v2.size()) ? v2[i] : 0;
+            if (rev1 < rev2) return -1;
+            if (rev1 > rev2) return 1;
+        }
+        
+        // Versions are equal
+        return 0;
+    }
+    
+private:
+    vector<int> splitVersion(string version) {
+        vector<int> result;
+        int i = 0, n = version.size();
+        while (i < n) {
+            int j = i;
+            while (j < n && version[j] != '.') ++j;
+            int rev = stoi(version.substr(i, j - i));
+            result.push_back(rev);
+            i = j + 1;
+        }
+        return result;
+    }
+};
