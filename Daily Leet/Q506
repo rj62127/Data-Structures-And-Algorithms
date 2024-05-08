@@ -1,0 +1,35 @@
+QS :- Relative Ranks
+QS Link :- https://leetcode.com/problems/relative-ranks/description/?envType=daily-question&envId=2024-05-08
+
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+
+class Solution {
+public:
+    std::vector<std::string> findRelativeRanks(std::vector<int>& score) {
+        std::map<int, int, std::greater<int>> scoreMap;
+        int n = score.size();
+        for (int i = 0; i < n; ++i) {
+            scoreMap[score[i]] = i; // Map score to its index
+        }
+        
+        std::sort(score.begin(), score.end(), std::greater<int>()); // Sort scores in descending order
+        
+        std::vector<std::string> answer(n);
+        for (int i = 0; i < n; ++i) {
+            int index = scoreMap[score[i]]; // Get original index of current score
+            if (i == 0)
+                answer[index] = "Gold Medal";
+            else if (i == 1)
+                answer[index] = "Silver Medal";
+            else if (i == 2)
+                answer[index] = "Bronze Medal";
+            else
+                answer[index] = std::to_string(i + 1); // Convert rank to string
+        }
+        
+        return answer;
+    }
+};
