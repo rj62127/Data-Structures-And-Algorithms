@@ -1,0 +1,59 @@
+QS :- Score After Flipping Matrix
+QS Link :- https://leetcode.com/problems/score-after-flipping-matrix/description/?envType=daily-question&envId=2024-05-13
+
+
+#include <vector>
+#include <cmath>
+
+class Solution {
+public:
+    int matrixScore(std::vector<std::vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        
+        // Step 1: Ensure each row starts with 1
+        for (int i = 0; i < m; ++i) {
+            if (grid[i][0] == 0) {
+                toggleRow(grid, i);
+            }
+        }
+        
+        // Step 2: Toggle columns if necessary
+        for (int j = 1; j < n; ++j) {
+            int count1 = 0;
+            for (int i = 0; i < m; ++i) {
+                if (grid[i][j] == 1) {
+                    count1++;
+                }
+            }
+            if (count1 < m - count1) {
+                toggleColumn(grid, j);
+            }
+        }
+        
+        // Calculate the score
+        int score = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                score += grid[i][j] * pow(2, n - j - 1);
+            }
+        }
+        
+        return score;
+    }
+    
+private:
+    // Function to toggle a row
+    void toggleRow(std::vector<std::vector<int>>& grid, int row) {
+        for (int j = 0; j < grid[0].size(); ++j) {
+            grid[row][j] = 1 - grid[row][j];
+        }
+    }
+    
+    // Function to toggle a column
+    void toggleColumn(std::vector<std::vector<int>>& grid, int col) {
+        for (int i = 0; i < grid.size(); ++i) {
+            grid[i][col] = 1 - grid[i][col];
+        }
+    }
+};
