@@ -1,0 +1,49 @@
+QS :- Path with Maximum GoldPath with Maximum Gold
+QS Link :- https://leetcode.com/problems/path-with-maximum-gold/description/?envType=daily-question&envId=2024-05-14
+
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    int getMaximumGold(std::vector<std::vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        int maxGold = 0;
+        
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] != 0) {
+                    maxGold = std::max(maxGold, dfs(grid, i, j));
+                }
+            }
+        }
+        
+        return maxGold;
+    }
+    
+    int dfs(std::vector<std::vector<int>>& grid, int i, int j) {
+        int m = grid.size();
+        int n = grid[0].size();
+        int gold = grid[i][j];
+        grid[i][j] = 0; // Mark as visited
+        
+        int maxGold = 0;
+        
+        // Explore four directions
+        int dx[] = {0, 0, 1, -1};
+        int dy[] = {1, -1, 0, 0};
+        
+        for (int k = 0; k < 4; ++k) {
+            int x = i + dx[k];
+            int y = j + dy[k];
+            
+            if (x >= 0 && x < m && y >= 0 && y < n && grid[x][y] != 0) {
+                maxGold = std::max(maxGold, dfs(grid, x, y));
+            }
+        }
+        
+        grid[i][j] = gold; // Restore the cell
+        return maxGold + gold;
+    }
+};
