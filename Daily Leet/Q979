@@ -1,0 +1,29 @@
+QS :- Distribute Coins in Binary Tree
+QS Link :- https://leetcode.com/problems/distribute-coins-in-binary-tree/description/?envType=daily-question&envId=2024-05-18
+
+class Solution {
+public:
+    int distributeCoins(TreeNode* root) {
+        int totalMoves = 0;
+        // Perform DFS from the root node
+        dfs(root, totalMoves);
+        return totalMoves;
+    }
+    
+private:
+    // Helper function to perform DFS and calculate the moves
+    int dfs(TreeNode* node, int& totalMoves) {
+        if (!node) return 0;
+        
+        // Calculate the excess coins in the left and right subtrees
+        int leftExcess = dfs(node->left, totalMoves);
+        int rightExcess = dfs(node->right, totalMoves);
+        
+        // Total moves is incremented by the number of excess coins moved
+        totalMoves += abs(leftExcess) + abs(rightExcess);
+        
+        // Return the total excess coins for the current node
+        // The node itself needs (node->val - 1) coins to balance
+        return node->val + leftExcess + rightExcess - 1;
+    }
+};
