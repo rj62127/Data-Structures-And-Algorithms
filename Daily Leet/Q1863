@@ -1,0 +1,28 @@
+// QS :- Sum of All Subset XOR Totals
+// QS Link :- https://leetcode.com/problems/sum-of-all-subset-xor-totals/description/?envType=daily-question&envId=2024-05-20
+
+
+
+#include <vector>
+#include <cmath>
+
+class Solution {
+public:
+    int subsetXORSum(std::vector<int>& nums) {
+        int n = nums.size();
+        int totalXORSum = 0;
+        int numSubsets = 1 << n; // 2^n subsets
+        
+        for (int subsetMask = 0; subsetMask < numSubsets; ++subsetMask) {
+            int currentXOR = 0;
+            for (int i = 0; i < n; ++i) {
+                if (subsetMask & (1 << i)) {
+                    currentXOR ^= nums[i];
+                }
+            }
+            totalXORSum += currentXOR;
+        }
+        
+        return totalXORSum;
+    }
+};
