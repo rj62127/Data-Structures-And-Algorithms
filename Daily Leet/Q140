@@ -1,0 +1,45 @@
+QS :- Word Break II
+QS Link :- https://leetcode.com/problems/word-break-ii/description/?envType=daily-question&envId=2024-05-25
+
+
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <sstream>
+
+class Solution {
+public:
+    std::vector<std::string> wordBreak(std::string s, std::vector<std::string>& wordDict) {
+        std::unordered_set<std::string> wordSet(wordDict.begin(), wordDict.end());
+        std::unordered_map<int, std::vector<std::string>> memo;
+        return backtrack(s, 0, wordSet, memo);
+    }
+    
+private:
+    std::vector<std::string> backtrack(const std::string& s, int start, const std::unordered_set<std::string>& wordSet, std::unordered_map<int, std::vector<std::string>>& memo) {
+        if (memo.find(start) != memo.end()) {
+            return memo[start];
+        }
+        
+        std::vector<std::string> result;
+        
+        if (start == s.size()) {
+            result.push_back("");
+            return result;
+        }
+        
+        for (int end = start + 1; end <= s.size(); ++end) {
+            std::string word = s.substr(start, end - start);
+            if (wordSet.find(word) != wordSet.end()) {
+                std::vector<std::string> subList = backtrack(s, end, wordSet, memo);
+                for (const std::string& sub : subList) {
+                    result.push_back(word + (sub.empty() ? "" : " ") + sub);
+                }
+            }
+        }
+        
+        memo[start] = result;
+        return result;
+    }
+};
