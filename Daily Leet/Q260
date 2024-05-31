@@ -1,0 +1,32 @@
+// QS :- Single Number III
+// QS Link :- https://leetcode.com/problems/single-number-iii/?envType=daily-question&envId=2024-05-31
+
+
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& nums) {
+        // Step 1: XOR all numbers to get xor_all
+        int xor_all = 0;
+        for (int num : nums) {
+            xor_all ^= num;
+        }
+        
+        // Step 2: Find the rightmost set bit in xor_all using an unsigned type to avoid overflow
+        unsigned int rightmost_set_bit = xor_all & -static_cast<unsigned int>(xor_all);
+        
+        // Step 3: Partition numbers into two groups and XOR each group
+        int num1 = 0, num2 = 0;
+        for (int num : nums) {
+            if (num & rightmost_set_bit) {
+                num1 ^= num;
+            } else {
+                num2 ^= num;
+            }
+        }
+        
+        return {num1, num2};
+    }
+};
