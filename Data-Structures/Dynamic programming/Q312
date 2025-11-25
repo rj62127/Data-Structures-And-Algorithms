@@ -1,0 +1,31 @@
+QS :- Burst Balloons
+QS Link :- https://leetcode.com/problems/burst-balloons/description/?envType=problem-list-v2&envId=dynamic-programming
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> val(n + 2, 1);
+        
+        
+        for (int i = 0; i < n; ++i) {
+            val[i + 1] = nums[i];
+        }
+        
+        vector<vector<int>> dp(n + 2, vector<int>(n + 2, 0));
+        
+        // length of the interval
+        for (int len = 2; len <= n + 1; ++len) {
+            for (int left = 0; left + len <= n + 1; ++left) {
+                int right = left + len;
+                // last balloon to burst in (left, right)
+                for (int k = left + 1; k < right; ++k) {
+                    dp[left][right] = max(dp[left][right],
+                        dp[left][k] + dp[k][right] + val[left] * val[k] * val[right]);
+                }
+            }
+        }
+        
+        return dp[0][n + 1];
+    }
+};
