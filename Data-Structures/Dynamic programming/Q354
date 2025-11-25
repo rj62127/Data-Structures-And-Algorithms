@@ -1,0 +1,32 @@
+QS :- Russian Doll Envelopes
+QS Link :- https://leetcode.com/problems/russian-doll-envelopes/description/?envType=problem-list-v2&envId=dynamic-programming
+
+
+class Solution {
+public:
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        // Step 1: Sort
+        sort(envelopes.begin(), envelopes.end(),
+             [](const vector<int>& a, const vector<int>& b) {
+                 if (a[0] == b[0]) 
+                     return a[1] > b[1]; // height descending when widths equal
+                 return a[0] < b[0];    // width ascending
+             });
+
+        // Step 2: Extract heights and run LIS
+        vector<int> dp;  // dp[i] will store the smallest possible tail for a subsequence of length i+1
+
+        for (auto& env : envelopes) {
+            int h = env[1];
+            // binary search
+            auto it = lower_bound(dp.begin(), dp.end(), h);
+            if (it == dp.end()) {
+                dp.push_back(h);
+            } else {
+                *it = h;
+            }
+        }
+
+        return dp.size();
+    }
+};
