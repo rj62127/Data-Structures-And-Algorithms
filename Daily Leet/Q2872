@@ -1,0 +1,47 @@
+QS :- Maximum Number of K-Divisible Components
+
+QS Link:- https://leetcode.com/problems/maximum-number-of-k-divisible-components/description/?envType=daily-question&envId=2025-11-28
+
+
+class Solution {
+public:
+    int res = 0;
+    vector<vector<int>> graph;
+    vector<int> vals;
+    int K;
+
+    long long dfs(int u, int parent) {
+        long long sum = vals[u];
+
+        for (int v : graph[u]) {
+            if (v == parent) continue;
+
+            long long childSum = dfs(v, u);
+
+            if (childSum % K == 0) {
+                
+                res++;
+            } else {
+                sum += childSum;
+            }
+        }
+
+        return sum;
+    }
+
+    int maxKDivisibleComponents(int n, vector<vector<int>>& edges, vector<int>& values, int k) {
+        graph.assign(n, {});
+        vals = values;
+        K = k;
+
+        for (auto& e : edges) {
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
+        }
+
+        dfs(0, -1);
+
+        
+        return res + 1;
+    }
+};
